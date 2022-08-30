@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "64202454703",
+    "project_id": "app-ten-firebase",
+    "storage_bucket": "app-ten-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64202454703:android:ea03b59006c9844dd7c65a",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64202454703-vv0mokje6l4t00fkce6mckbk9vg0ks8d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4rKwYnBzeTSmtdCsNq4pERSbHx6d5lBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64202454703-vv0mokje6l4t00fkce6mckbk9vg0ks8d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
