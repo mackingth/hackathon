@@ -37,6 +37,7 @@ dependencies:
   firebase_core: ^1.21.1
   rapido: ^0.2.4
   cloud_firestore: ^3.4.6
+  firebase_auth: ^0.6.2+1
 
 dev_dependencies:
   flutter_test:
