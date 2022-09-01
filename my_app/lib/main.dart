@@ -175,6 +175,7 @@ class ChatPage extends StatelessWidget {
     // ユーザー情報を受け取る
     final UserState userState = Provider.of<UserState>(context);
     final User user = userState.user!;
+    final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
     return Scaffold(
       appBar: AppBar(
@@ -249,49 +250,49 @@ class ChatPage extends StatelessWidget {
               },
             ),
           ),
+          
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: () {},
-                  child: Text('enabled'),
+                  style: style,
+                  onPressed: () async{
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) {
+                        return TargetPostPage();
+                      }),
+                    );
+                  },
+                  child: Text('目標書込'),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
-                    elevation: 16,
-                  ),
-                  child: Text('enabled'),
+                  style:style,
+                  onPressed: () async{
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) {
+                        return AchievementPostPage();
+                      }),
+                    );
+                  },
+                  child: Text('達成書込'),
                 ),
               ],
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          // 投稿画面に遷移
-          await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return AddPostPage();
-            }),
-          );
-        },
-      ),
     );
   }
 }
 
-// 投稿画面用Widget
-class AddPostPage extends StatefulWidget {
-  AddPostPage();
+// 目標書込画面用Widget
+class TargetPostPage extends StatefulWidget {
+  TargetPostPage();
 
   @override
-  _AddPostPageState createState() => _AddPostPageState();
+  _TargetPostPageState createState() => _TargetPostPageState();
 }
 
-class _AddPostPageState extends State<AddPostPage> {
+class _TargetPostPageState extends State<TargetPostPage> {
   // 入力した投稿メッセージ
   String messageText = '';
 
@@ -303,7 +304,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('チャット投稿'),
+        title: Text('目標投稿'),
       ),
       body: Center(
         child: Container(
@@ -313,7 +314,79 @@ class _AddPostPageState extends State<AddPostPage> {
             children: <Widget>[
               // 投稿メッセージ入力
               TextFormField(
-                decoration: InputDecoration(labelText: '投稿メッセージ'),
+                decoration: InputDecoration(labelText: '目標'),
+                // 複数行のテキスト入力
+                keyboardType: TextInputType.multiline,
+                // 最大3行
+                maxLines: 3,
+                onChanged: (String value) {
+                  setState(() {
+                    messageText = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  child: Text('投稿'),
+                  onPressed: () async {
+                    final date =
+                        DateTime.now().toLocal().toIso8601String(); // 現在の日時
+                    final email = user.email; // AddPostPage のデータを参照
+                    // 投稿メッセージ用ドキュメント作成
+                    await FirebaseFirestore.instance
+                        .collection('posts') // コレクションID指定
+                        .doc() // ドキュメントID自動生成
+                        .set({
+                      'text': messageText,
+                      'email': email,
+                      'date': date
+                    });
+                    // 1つ前の画面に戻る
+                    Navigator.of(context).pop();
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// 達成書込画面用Widget
+class AchievementPostPage extends StatefulWidget {
+  AchievementPostPage();
+
+  @override
+  _AchievementPostPageState createState() => _AchievementPostPageState();
+}
+
+class _AchievementPostPageState extends State<AchievementPostPage> {
+  // 入力した投稿メッセージ
+  String messageText = '';
+
+  @override
+  Widget build(BuildContext context) {
+    // ユーザー情報を受け取る
+    final UserState userState = Provider.of<UserState>(context);
+    final User user = userState.user!;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('達成更新'),
+      ),
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // 投稿メッセージ入力
+              TextFormField(
+                decoration: InputDecoration(labelText: '達成'),
                 // 複数行のテキスト入力
                 keyboardType: TextInputType.multiline,
                 // 最大3行
