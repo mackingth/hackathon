@@ -249,6 +249,23 @@ class ChatPage extends StatelessWidget {
               },
             ),
           ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text('enabled'),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
+                    elevation: 16,
+                  ),
+                  child: Text('enabled'),
+                ),
+              ],
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
