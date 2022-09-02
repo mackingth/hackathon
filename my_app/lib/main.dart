@@ -391,6 +391,7 @@ class _TargetPostPageState extends State<TargetPostPage> {
                       'email': email,
                       'date': date
                     });
+                    //koko
                     // 1つ前の画面に戻る
                     Navigator.of(context).pop();
                   },
