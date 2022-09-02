@@ -415,6 +415,54 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+
+              Expanded(
+                // Stream
+                // 非同期処理の結果を元にWidgetを作れる
+                child: StreamBuilder<QuerySnapshot>(
+                  // 投稿メッセージ一覧を取得（非同期処理）
+                  // 投稿日時でソート
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .orderBy('date')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    // データが取得できた場合
+                    if (snapshot.hasData) {
+                      final List<DocumentSnapshot> documents = snapshot.data!.docs;
+                      // 取得した投稿メッセージ一覧を元にリスト表示
+                      return ListView(
+                        children: documents.map((document) {
+                          return Card(
+                            child: ListTile(
+                              title: Text(document['text']),
+                              subtitle: Text(document['email']),
+                              // 自分の投稿メッセージの場合は削除ボタンを表示
+                              trailing: document['email'] == user.email
+                                  ? IconButton(
+                                      icon: Icon(Icons.add_circle_outline),
+                                      onPressed: () async{
+                                        await Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) {
+                                            return TargetDetail();
+                                          }),
+                                        );
+                                      },
+                                    )
+                                  : null,
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                    // データが読込中の場合
+                    return Center(
+                      child: Text('読込中...'),
+                    );
+                  },
+                ),
+              ),
+
               // 投稿メッセージ入力
               TextFormField(
                 decoration: InputDecoration(labelText: '達成'),
@@ -455,6 +503,29 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+// 達成詳細画面用Widget
+
+class TargetDetail extends StatefulWidget {
+  TargetDetail();
+
+  @override
+  _TargetDetailUpdateState createState() => _TargetDetailUpdateState();
+}
+
+class _TargetDetailUpdateState extends State<TargetDetail> {
+  @override
+  Widget build(BuildContext context) {
+    final UserState userState = Provider.of<UserState>(context);
+    final User user = userState.user!;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('えー'),
+      )
     );
   }
 }
