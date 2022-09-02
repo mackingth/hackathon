@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -524,7 +526,7 @@ class _TargetDetailUpdateState extends State<TargetDetail> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('えー'),
+        title: Text('わかんねー'),
       )
     );
   }
