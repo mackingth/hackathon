@@ -329,7 +329,6 @@ class _TargetPostPageState extends State<TargetPostPage> {
                     // データが取得できた場合
                     if (snapshot.hasData) {
                       final List<DocumentSnapshot> documents = snapshot.data!.docs;
-                      // 分らんvar documents_email = documents.where((documents) => user.email == context);
                       // 取得した投稿メッセージ一覧を元にリスト表示
                       return ListView(
                         children: documents.map((document) {
@@ -394,9 +393,6 @@ class _TargetPostPageState extends State<TargetPostPage> {
                       'email': email,
                       'date': date
                     });
-                    //koko
-                    // 1つ前の画面に戻る
-                    Navigator.of(context).pop();
                   },
                 ),
               )
