@@ -41,6 +41,7 @@ dependencies:
   flutter_riverpod: ^1.0.4
   flutter_line_sdk: ^2.2.0
   io: ^1.0.3
+  lottie: ^1.4.2
 
 dev_dependencies:
   flutter_test:

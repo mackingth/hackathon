@@ -1,5 +1,5 @@
 // ignore: duplicate_ignore
-// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors, duplicate_ignore
+// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors, duplicate_ignores
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:lottie/lottie.dart';
 
 // 更新可能なデータ
 class UserState extends ChangeNotifier {
@@ -70,17 +71,34 @@ class _LoginPageState extends State<LoginPage> {
     final UserState userState = Provider.of<UserState>(context);
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 149, 196, 214), // 背景色設定
+      appBar: AppBar(
+        title: const Text('Welcome to Carrot and Stick'),
+      ),
       body: Center(
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Lottie.network(
+                'https://assets10.lottiefiles.com/packages/lf20_oygnve11.json',
+                errorBuilder: (context, error, stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+              
               // メールアドレス入力
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
-                    decoration: const InputDecoration(labelText: 'メールアドレス'),
+                    decoration: const InputDecoration(
+                      labelText: 'メールアドレス',
+                      border: OutlineInputBorder()
+                    ),
                     onChanged: (String value) {
                       setState(() {
                         email = value;
@@ -92,7 +110,10 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
-                    decoration: const InputDecoration(labelText: 'パスワード'),
+                    decoration: const InputDecoration(
+                      labelText: 'パスワード',
+                      border: OutlineInputBorder()
+                    ),
                     obscureText: true,
                     onChanged: (String value) {
                       setState(() {
@@ -306,7 +327,6 @@ class TargetPostPage extends StatefulWidget {
   @override
   _TargetPostPageState createState() => _TargetPostPageState();
 }
-
 class _TargetPostPageState extends State<TargetPostPage> {
   // 入力した投稿メッセージ
   String messageText = '';
@@ -317,7 +337,7 @@ class _TargetPostPageState extends State<TargetPostPage> {
     final UserState userState = Provider.of<UserState>(context);
     final User user = userState.user!;
 
-    return Scaffold(
+    return Scaffold (
       appBar: AppBar(
         title: const Text('目標投稿'),
       ),
@@ -326,14 +346,15 @@ class _TargetPostPageState extends State<TargetPostPage> {
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: <Widget> [
               // 投稿メッセージ入力
-              Expanded(
+              
+              Expanded (
                 // Stream
                 // 非同期処理の結果を元にWidgetを作れる
-                child: StreamBuilder<QuerySnapshot>(
+                child: StreamBuilder<QuerySnapshot> (
                   // 本人の投稿メッセージ一覧を取得（非同期処理）
-                  // 投稿日時でソート
+                  // 投稿日時でソート                  
                   stream: FirebaseFirestore.instance
                       .collectionGroup('posts')
                       .where('email', isEqualTo: user.email)
@@ -344,8 +365,9 @@ class _TargetPostPageState extends State<TargetPostPage> {
                     if (snapshot.hasData) {
                       final List<DocumentSnapshot> documents =
                           snapshot.data!.docs;
+                      print(user.email);
                       // 取得した投稿メッセージ一覧を元にリスト表示                      
-                      return ListView(
+                      return ListView (
                         children: documents.map((document) {
                           return Card(
                             child: ListTile(
