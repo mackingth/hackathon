@@ -397,41 +397,61 @@ class _TargetPostPageState extends State<TargetPostPage> {
                   },
                 ),
               ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: '目標'),
-                // 複数行のテキスト入力
-                keyboardType: TextInputType.multiline,
-                // 最大3行
-                maxLines: 3,
-                onChanged: (String value) {
-                  setState(() {
-                    messageText = value;
-                  });
-                },
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  TextFormField(
+                    decoration: const InputDecoration(labelText: '目標'),
+                    // 複数行のテキスト入力
+                    keyboardType: TextInputType.multiline,
+                    // 最大3行
+                    maxLines: 3,
+                    onChanged: (String value) {
+                      setState(() {
+                        messageText = value;
+                      });
+                    },
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 300,
+                          height: 100,
+                          child: ElevatedButton(
+                            child: const Text('設定'),
+                            onPressed: () async {
+                              final date = DateTime.now()
+                                  .toLocal()
+                                  .toIso8601String(); // 現在の日時
+                              final email = user.email; // AddPostPage のデータを参照
+                              // 投稿メッセージ用ドキュメント作成
+                              await FirebaseFirestore.instance
+                                  .collection('posts') // コレクションID指定
+                                  .doc() // ドキュメントID自動生成
+                                  .set({
+                                'text': messageText,
+                                'email': email,
+                                'date': date
+                              });
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: 300,
+                          height: 100,
+                          child: ElevatedButton(
+                            child: const Text('勉強時間'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                      ]),
+                ],
               ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: const Text('設定'),
-                  onPressed: () async {
-                    final date =
-                        DateTime.now().toLocal().toIso8601String(); // 現在の日時
-                    final email = user.email; // AddPostPage のデータを参照
-                    // 投稿メッセージ用ドキュメント作成
-                    await FirebaseFirestore.instance
-                        .collection('posts') // コレクションID指定
-                        .doc() // ドキュメントID自動生成
-                        .set({
-                      'text': messageText,
-                      'email': email,
-                      'date': date
-                    });
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
-                  },
-                ),
-              )
             ],
           ),
         ),
