@@ -531,3 +531,4 @@ class _TargetDetailUpdateState extends State<TargetDetail> {
     );
   }
 }
+//おりゃ
