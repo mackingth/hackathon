@@ -90,37 +90,35 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
               ),
-              
+
               // メールアドレス入力
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'メールアドレス',
-                      border: OutlineInputBorder()
-                    ),
-                    onChanged: (String value) {
-                      setState(() {
-                        email = value;
-                      });
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                      labelText: 'メールアドレス', border: OutlineInputBorder()),
+                  onChanged: (String value) {
+                    setState(() {
+                      email = value;
+                    });
                   },
                 ),
               ),
               // パスワード入力
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'パスワード',
-                      border: OutlineInputBorder()
-                    ),
-                    obscureText: true,
-                    onChanged: (String value) {
-                      setState(() {
-                        password = value;
-                      });
-                    },
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                      labelText: 'パスワード', border: OutlineInputBorder()),
+                  obscureText: true,
+                  onChanged: (String value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -262,7 +260,8 @@ class ChatPage extends StatelessWidget {
                       return Card(
                         child: ListTile(
                           title: Text(document['text']),
-                          subtitle: Text(document['email']),
+                          subtitle: Text(
+                              document['email'] + ' , ' + document['date']),
                         ),
                       );
                     }).toList(),
@@ -282,35 +281,33 @@ class ChatPage extends StatelessWidget {
               SizedBox(
                 width: 330,
                 height: 100,
-                child : 
-                  ElevatedButton(
-                    style: style,
-                    onPressed: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) {
-                          return TargetPostPage();
-                        }),
-                      );
-                    },
-                    child: const Text('目標書込'),
-                  ),
+                child: ElevatedButton(
+                  style: style,
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) {
+                        return TargetPostPage();
+                      }),
+                    );
+                  },
+                  child: const Text('目標書込'),
+                ),
               ),
               SizedBox(
                 width: 330,
                 height: 100,
-                child : 
-                  ElevatedButton(
-                    style: style,
-                    onPressed: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) {
-                          return AchievementPostPage();
-                        }),
-                      );
-                    },
-                    child: const Text('達成書込'),
-                  ),
-               ),
+                child: ElevatedButton(
+                  style: style,
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) {
+                        return AchievementPostPage();
+                      }),
+                    );
+                  },
+                  child: const Text('達成書込'),
+                ),
+              ),
             ],
           ),
         ],
@@ -327,6 +324,7 @@ class TargetPostPage extends StatefulWidget {
   @override
   _TargetPostPageState createState() => _TargetPostPageState();
 }
+
 class _TargetPostPageState extends State<TargetPostPage> {
   // 入力した投稿メッセージ
   String messageText = '';
@@ -337,7 +335,7 @@ class _TargetPostPageState extends State<TargetPostPage> {
     final UserState userState = Provider.of<UserState>(context);
     final User user = userState.user!;
 
-    return Scaffold (
+    return Scaffold(
       appBar: AppBar(
         title: const Text('目標投稿'),
       ),
@@ -346,32 +344,33 @@ class _TargetPostPageState extends State<TargetPostPage> {
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget> [
+            children: <Widget>[
               // 投稿メッセージ入力
-              
-              Expanded (
+
+              Expanded(
                 // Stream
                 // 非同期処理の結果を元にWidgetを作れる
-                child: StreamBuilder<QuerySnapshot> (
+                child: StreamBuilder<QuerySnapshot>(
                   // 本人の投稿メッセージ一覧を取得（非同期処理）
-                  // 投稿日時でソート                  
+                  // 投稿日時でソート
                   stream: FirebaseFirestore.instance
                       .collectionGroup('posts')
                       .where('email', isEqualTo: user.email)
                       .orderBy('date')
                       .snapshots(),
                   builder: (context, snapshot) {
-                    // データが取得できた場合                    
+                    // データが取得できた場合
                     if (snapshot.hasData) {
                       final List<DocumentSnapshot> documents =
                           snapshot.data!.docs;
-                      // 取得した投稿メッセージ一覧を元にリスト表示                      
-                      return ListView (
+                      // 取得した投稿メッセージ一覧を元にリスト表示
+                      return ListView(
                         children: documents.map((document) {
                           return Card(
                             child: ListTile(
                               title: Text(document['text']),
-                              subtitle: Text(document['email']),
+                              subtitle: Text(
+                                  document['email'] + ' , ' + document['date']),
                               // 自分の投稿メッセージの場合は削除ボタンを表示
                               trailing: document['email'] == user.email
                                   ? IconButton(
@@ -390,8 +389,8 @@ class _TargetPostPageState extends State<TargetPostPage> {
                         }).toList(),
                       );
                     }
-                    
-                    // データが読込中の場合                   
+
+                    // データが読込中の場合
                     return const Center(
                       child: Text('読込中...'),
                     );
@@ -492,7 +491,8 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                           return Card(
                             child: ListTile(
                               title: Text(document['text']),
-                              subtitle: Text(document['email']),
+                              subtitle: Text(
+                                  document['email'] + ' , ' + document['date']),
                               // 自分の投稿メッセージの場合はプラスボタンを表示
                               trailing: document['email'] == user.email
                                   ? IconButton(
@@ -552,27 +552,3 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
     );
   }
 }
-
-// 達成詳細画面用Widget
-
-class TargetDetail extends StatefulWidget {
-  TargetDetail();
-
-  @override
-  _TargetDetailUpdateState createState() => _TargetDetailUpdateState();
-}
-
-class _TargetDetailUpdateState extends State<TargetDetail> {
-  @override
-  Widget build(BuildContext context) {
-    final UserState userState = Provider.of<UserState>(context);
-    final User user = userState.user!;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('わかんねー'),
-      )
-    );
-  }
-}
-//おりゃ
