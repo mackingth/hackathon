@@ -454,19 +454,31 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                             child: ListTile(
                               title: Text(document['text']),
                               subtitle: Text(document['email']),
-                              // 自分の投稿メッセージの場合は削除ボタンを表示
+                              // 自分の投稿メッセージの場合はプラスボタンを表示
                               trailing: document['email'] == user.email
                                   ? IconButton(
                                       icon:
                                           const Icon(Icons.add_circle_outline),
                                       onPressed: () async {
-                                        await Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (context) {
-                                            return const TargetDetail();
-                                          }),
-                                        );
-                                      },
-                                    )
+                                        final date = DateTime.now()
+                                            .toLocal()
+                                            .toIso8601String(); // 現在の日時
+                                        final email =
+                                            user.email; // AddPostPage のデータを参照
+                                        // 投稿メッセージ用ドキュメント作成
+                                        await FirebaseFirestore.instance
+                                            .collection('posts') // コレクションID指定
+                                            .doc() // ドキュメントID自動生成
+                                            .set({
+                                          'text': document['text'] +
+                                              ':' +
+                                              messageText,
+                                          'email': email,
+                                          'date': date
+                                        });
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.of(context).pop();
+                                      })
                                   : null,
                             ),
                           );
@@ -494,56 +506,10 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                   });
                 },
               ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: const Text('更新'),
-                  onPressed: () async {
-                    final date =
-                        DateTime.now().toLocal().toIso8601String(); // 現在の日時
-                    final email = user.email; // AddPostPage のデータを参照
-                    // 投稿メッセージ用ドキュメント作成
-                    await FirebaseFirestore.instance
-                        .collection('posts') // コレクションID指定
-                        .doc() // ドキュメントID自動生成
-                        .set({
-                      'text': messageText,
-                      'email': email,
-                      'date': date
-                    });
-                    // 1つ前の画面に戻る
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
-                  },
-                ),
-              )
             ],
           ),
         ),
       ),
     );
-  }
-}
-
-// 達成詳細画面用Widget
-
-class TargetDetail extends StatefulWidget {
-  const TargetDetail();
-
-  @override
-  _TargetDetailUpdateState createState() => _TargetDetailUpdateState();
-}
-
-class _TargetDetailUpdateState extends State<TargetDetail> {
-  @override
-  Widget build(BuildContext context) {
-    final UserState userState = Provider.of<UserState>(context);
-    final User user = userState.user!;
-
-    return Scaffold(
-        appBar: AppBar(
-      title: const Text('わかんねー'),
-    ));
   }
 }
