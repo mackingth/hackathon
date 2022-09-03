@@ -339,13 +339,12 @@ class _TargetPostPageState extends State<TargetPostPage> {
                       .where('email', isEqualTo: user.email)
                       .orderBy('date')
                       .snapshots(),
-                  
                   builder: (context, snapshot) {
                     // データが取得できた場合
                     if (snapshot.hasData) {
                       final List<DocumentSnapshot> documents =
                           snapshot.data!.docs;
-                      // 取得した投稿メッセージ一覧を元にリスト表示
+                      // 取得した投稿メッセージ一覧を元にリスト表示                      
                       return ListView(
                         children: documents.map((document) {
                           return Card(
