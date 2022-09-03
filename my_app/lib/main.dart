@@ -1,8 +1,6 @@
 // ignore: duplicate_ignore
 // ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors, duplicate_ignore
 
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,23 +77,29 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               // メールアドレス入力
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'メールアドレス'),
-                onChanged: (String value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(labelText: 'メールアドレス'),
+                    onChanged: (String value) {
+                      setState(() {
+                        email = value;
+                      });
+                  },
+                ),
               ),
               // パスワード入力
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'パスワード'),
-                obscureText: true,
-                onChanged: (String value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(labelText: 'パスワード'),
+                    obscureText: true,
+                    onChanged: (String value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                  ),
               ),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -179,6 +183,7 @@ class _LoginPageState extends State<LoginPage> {
 class ChatPage extends StatelessWidget {
   // ignore: prefer_const_constructors_in_immutables
   ChatPage();
+  final myId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -253,28 +258,38 @@ class ChatPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              ElevatedButton(
-                style: style,
-                onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return TargetPostPage();
-                    }),
-                  );
-                },
-                child: const Text('目標書込'),
+              SizedBox(
+                width: 330,
+                height: 100,
+                child : 
+                  ElevatedButton(
+                    style: style,
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
+                          return TargetPostPage();
+                        }),
+                      );
+                    },
+                    child: const Text('目標書込'),
+                  ),
               ),
-              ElevatedButton(
-                style: style,
-                onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return AchievementPostPage();
-                    }),
-                  );
-                },
-                child: const Text('達成書込'),
-              ),
+              SizedBox(
+                width: 330,
+                height: 100,
+                child : 
+                  ElevatedButton(
+                    style: style,
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
+                          return AchievementPostPage();
+                        }),
+                      );
+                    },
+                    child: const Text('達成書込'),
+                  ),
+               ),
             ],
           ),
         ],
@@ -317,12 +332,14 @@ class _TargetPostPageState extends State<TargetPostPage> {
                 // Stream
                 // 非同期処理の結果を元にWidgetを作れる
                 child: StreamBuilder<QuerySnapshot>(
-                  // 投稿メッセージ一覧を取得（非同期処理）
+                  // 本人の投稿メッセージ一覧を取得（非同期処理）
                   // 投稿日時でソート
                   stream: FirebaseFirestore.instance
-                      .collection('posts')
+                      .collectionGroup('posts')
+                      .where('email', isEqualTo: user.email)
                       .orderBy('date')
                       .snapshots(),
+                  
                   builder: (context, snapshot) {
                     // データが取得できた場合
                     if (snapshot.hasData) {
@@ -513,7 +530,6 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
     );
   }
 }
-<<<<<<< HEAD
 
 // 達成詳細画面用Widget
 
@@ -538,6 +554,3 @@ class _TargetDetailUpdateState extends State<TargetDetail> {
   }
 }
 //おりゃ
-=======
-//終わんね
->>>>>>> 7ff83ddc882fee10a33dbdf7007d533c91c04c91

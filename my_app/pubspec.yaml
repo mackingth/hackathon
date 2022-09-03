@@ -40,6 +40,7 @@ dependencies:
   firebase_auth: ^3.7.0
   flutter_riverpod: ^1.0.4
   flutter_line_sdk: ^2.2.0
+  io: ^1.0.3
 
 dev_dependencies:
   flutter_test:
