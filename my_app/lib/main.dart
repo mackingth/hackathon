@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:lottie/lottie.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 // 更新可能なデータ
 class UserState extends ChangeNotifier {
@@ -464,7 +466,7 @@ class _TargetPostPageState extends State<TargetPostPage> {
 class AchievementPostPage extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
   AchievementPostPage();
-
+  
   @override
   _AchievementPostPageState createState() => _AchievementPostPageState();
 }
@@ -479,6 +481,22 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
     final UserState userState = Provider.of<UserState>(context);
     final User user = userState.user!;
 
+    void _request(mg) async {
+      var url = Uri.https('https://api.line.me/v2/bot/message/broadcast','');
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {jYqO31OUnEOf/T/mj8OSOqWx+Ejp04X/Eg+nnH2Q7j3frEKGTdkJgp39Zh+hlah+BTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii7TmGrZQq8krgJRN9hZBr36cGAoNHK+4wK18AspTZKJQdB04t89/1O/w1cDnyilFU=}'
+      };
+      http.Response resp = await http.post(url, headers: headers, body: {
+                                                                          "messages":[
+                                                                            {
+                                                                              "type":"text",
+                                                                              "text":mg
+                                                                            }
+                                                                          ]
+                                                                        });
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('達成更新'),
@@ -535,6 +553,9 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                                           'email': email,
                                           'date': date
                                         });
+                                        var message = document['text'] + ':' + messageText;
+                                        _request(message);
+
                                         // ignore: use_build_context_synchronously
                                         Navigator.of(context).pop();
                                       })
