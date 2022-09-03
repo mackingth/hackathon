@@ -361,11 +361,10 @@ class _TargetPostPageState extends State<TargetPostPage> {
                       .orderBy('date')
                       .snapshots(),
                   builder: (context, snapshot) {
-                    // データが取得できた場合
+                    // データが取得できた場合                    
                     if (snapshot.hasData) {
                       final List<DocumentSnapshot> documents =
                           snapshot.data!.docs;
-                      print(user.email);
                       // 取得した投稿メッセージ一覧を元にリスト表示                      
                       return ListView (
                         children: documents.map((document) {
@@ -391,7 +390,8 @@ class _TargetPostPageState extends State<TargetPostPage> {
                         }).toList(),
                       );
                     }
-                    // データが読込中の場合
+                    
+                    // データが読込中の場合                   
                     return const Center(
                       child: Text('読込中...'),
                     );
@@ -477,7 +477,8 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                   // 投稿メッセージ一覧を取得（非同期処理）
                   // 投稿日時でソート
                   stream: FirebaseFirestore.instance
-                      .collection('posts')
+                      .collectionGroup('posts')
+                      .where('email', isEqualTo: user.email)
                       .orderBy('date')
                       .snapshots(),
                   builder: (context, snapshot) {
