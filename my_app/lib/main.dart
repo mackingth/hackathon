@@ -1,6 +1,8 @@
 // ignore: duplicate_ignore
 // ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors, duplicate_ignores
 
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:lottie/lottie.dart';
+import 'dart:async';
+import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
 
 // 更新可能なデータ
 class UserState extends ChangeNotifier {
@@ -214,7 +219,7 @@ class ChatPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('チャット'),
+        title: const Text('みんなの目標'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
@@ -416,8 +421,8 @@ class _TargetPostPageState extends State<TargetPostPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         SizedBox(
-                          width: 300,
-                          height: 100,
+                          width: 150,
+                          height: 50,
                           child: ElevatedButton(
                             child: const Text('設定'),
                             onPressed: () async {
@@ -440,12 +445,16 @@ class _TargetPostPageState extends State<TargetPostPage> {
                           ),
                         ),
                         SizedBox(
-                          width: 300,
-                          height: 100,
+                          width: 150,
+                          height: 50,
                           child: ElevatedButton(
                             child: const Text('勉強時間'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
+                            onPressed: () async {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) {
+                                  return const TimerPickerApp();
+                                }),
+                              );
                             },
                           ),
                         ),
@@ -567,6 +576,155 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class TimerPickerApp extends StatelessWidget {
+  const TimerPickerApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CupertinoApp(
+      theme: CupertinoThemeData(brightness: Brightness.light),
+      home: TimerPickerExample(),
+    );
+  }
+}
+
+class TimerPickerExample extends StatefulWidget {
+  const TimerPickerExample({super.key});
+
+  @override
+  State<TimerPickerExample> createState() => _TimerPickerExampleState();
+}
+
+class _TimerPickerExampleState extends State<TimerPickerExample> {
+  Duration duration = const Duration(hours: 1, minutes: 0, seconds: 0);
+
+  // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoTimerPicker.
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+              height: 216,
+              padding: const EdgeInsets.only(top: 6.0),
+              // The Bottom margin is provided to align the popup above the system navigation bar.
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              // Provide a background color for the popup.
+              color: CupertinoColors.systemBackground.resolveFrom(context),
+              // Use a SafeArea widget to avoid system overlaps.
+              child: SafeArea(
+                top: false,
+                child: child,
+              ),
+            ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('勉強時間設定画面'),
+      ),
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: CupertinoColors.label.resolveFrom(context),
+          fontSize: 22.0,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _TimerPickerItem(
+                children: <Widget>[
+                  const Text('Timer'),
+                  CupertinoButton(
+                    // Display a CupertinoTimerPicker with hour/minute mode.
+                    onPressed: () => _showDialog(
+                      CupertinoTimerPicker(
+                        mode: CupertinoTimerPickerMode.hm,
+                        initialTimerDuration: duration,
+                        // This is called when the user changes the timer duration.
+                        onTimerDurationChanged: (Duration newDuration) {
+                          setState(() => duration = newDuration);
+                        },
+                      ),
+                    ),
+                    // In this example, the timer value is formatted manually. You can use intl package
+                    // to format the value based on user's locale settings.
+                    child: Text(
+                      '$duration',
+                      style: const TextStyle(
+                        fontSize: 22.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  SizedBox(
+                    width: 330,
+                    height: 100,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('時間決定'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 330,
+                    height: 100,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('キャンセル'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// This class simply decorates a row of widgets.
+class _TimerPickerItem extends StatelessWidget {
+  const _TimerPickerItem({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: CupertinoColors.inactiveGray,
+            width: 0.0,
+          ),
+          bottom: BorderSide(
+            color: CupertinoColors.inactiveGray,
+            width: 0.0,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: children,
         ),
       ),
     );
