@@ -485,8 +485,9 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
       var url = Uri.https('https://api.line.me/v2/bot/message/broadcast','');
       Map<String, String> headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer {jYqO31OUnEOf/T/mj8OSOqWx+Ejp04X/Eg+nnH2Q7j3frEKGTdkJgp39Zh+hlah+BTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii7TmGrZQq8krgJRN9hZBr36cGAoNHK+4wK18AspTZKJQdB04t89/1O/w1cDnyilFU=}'
+        'Authorization': 'Bearer jYqO31OUnEOf/T/mj8OSOqWx+Ejp04X/Eg+nnH2Q7j3frEKGTdkJgp39Zh+hlah+BTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii7TmGrZQq8krgJRN9hZBr36cGAoNHK+4wK18AspTZKJQdB04t89/1O/w1cDnyilFU='
       };
+      print(mg);
       http.Response resp = await http.post(url, headers: headers, body: {
                                                                           "messages":[
                                                                             {
@@ -495,6 +496,7 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                                                                             }
                                                                           ]
                                                                         });
+      print(resp);
     }
     
     return Scaffold(
@@ -543,6 +545,7 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                                         final email =
                                             user.email; // AddPostPage のデータを参照
                                         // 投稿メッセージ用ドキュメント作成
+
                                         await FirebaseFirestore.instance
                                             .collection('posts') // コレクションID指定
                                             .doc() // ドキュメントID自動生成
@@ -553,8 +556,10 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                                           'email': email,
                                           'date': date
                                         });
+                                        
                                         var message = document['text'] + ':' + messageText;
                                         _request(message);
+                                        
 
                                         // ignore: use_build_context_synchronously
                                         Navigator.of(context).pop();
