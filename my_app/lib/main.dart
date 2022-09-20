@@ -13,6 +13,9 @@ import 'package:lottie/lottie.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 // 更新可能なデータ
 class UserState extends ChangeNotifier {
@@ -488,6 +491,57 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
     final UserState userState = Provider.of<UserState>(context);
     final User user = userState.user!;
 
+    // Line通知
+    /*Future<void> _request(mg) async {
+      var url = Uri.https('https://api.line.me/v2/bot/message/broadcast','');
+      var _content = '';
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {jYqO31OUnEOf/T/mj8OSOqWx+Ejp04X/Eg+nnH2Q7j3frEKGTdkJgp39Zh+hlah+BTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii7TmGrZQq8krgJRN9hZBr36cGAoNHK+4wK18AspTZKJQdB04t89/1O/w1cDnyilFU=}'
+      };
+      String body = json.encode({"messages":[{"type":"text","text":mg}]});
+      print(body);
+      http.Response resp = await http.post(url, headers: headers, body: body);
+      if (resp.statusCode != 200) {
+        setState(() {
+          int statusCode = resp.statusCode;
+          _content = "Failed to post $statusCode";
+        });
+        return;
+      }
+      setState(() {
+        _content = resp.body;
+      });
+    }
+    */
+
+    void _request(mg) {
+      String _content = '';
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {jYqO31OUnEOf/T/mj8OSOqWx+Ejp04X/Eg+nnH2Q7j3frEKGTdkJgp39Zh+hlah+BTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii7TmGrZQq8krgJRN9hZBr36cGAoNHK+4wK18AspTZKJQdB04t89/1O/w1cDnyilFU=}'
+      };
+      String body = json.encode({"messages":[{"type":"text","text":mg}]});
+      
+      //var url = Uri.https('https://api.line.me/v2/bot/message/broadcast','');
+      //print(url);
+      
+      //var resp = http.post(url, headers: headers, body: body);
+      /*
+      if (resp.statusCode != 200) {
+        setState(() {
+          int statusCode = resp.statusCode;
+          _content = "Failed to post $statusCode";
+        });
+        return;
+      }
+      setState(() {
+        _content = resp.body;
+      });
+      */
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('達成更新'),
@@ -533,17 +587,23 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
                                             .toIso8601String(); // 現在の日時
                                         final email =
                                             user.email; // AddPostPage のデータを参照
+                                        var message = document['text'] + ':' + messageText;
+
+                                        _request(message);
+
                                         // 投稿メッセージ用ドキュメント作成
                                         await FirebaseFirestore.instance
                                             .collection('posts') // コレクションID指定
-                                            .doc() // ドキュメントID自動生成
-                                            .set({
-                                          'text': document['text'] +
-                                              ':' +
-                                              messageText,
+                                            .doc(document.id) // ドキュメントIDの紐づけ
+                                            .update({
+                                          'text': message,
                                           'email': email,
                                           'date': date
                                         });
+
+                                        // メッセージ送信
+                                        //await _request(message);
+
                                         // ignore: use_build_context_synchronously
                                         Navigator.of(context).pop();
                                       })
