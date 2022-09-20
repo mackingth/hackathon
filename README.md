@@ -1,3 +1,3 @@
-# GAKUSEI-
+# GAKUSEI
 GAKUSEIハッカソンのリポジトリです
 

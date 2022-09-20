@@ -492,38 +492,20 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
     final User user = userState.user!;
 
     // Line通知
-    /*Future<void> _request(mg) async {
-      var url = Uri.https('https://api.line.me/v2/bot/message/broadcast','');
-      var _content = '';
-      
-      Map<String, String> headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer {jYqO31OUnEOf/T/mj8OSOqWx+Ejp04X/Eg+nnH2Q7j3frEKGTdkJgp39Zh+hlah+BTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii7TmGrZQq8krgJRN9hZBr36cGAoNHK+4wK18AspTZKJQdB04t89/1O/w1cDnyilFU=}'
-      };
-      String body = json.encode({"messages":[{"type":"text","text":mg}]});
-      print(body);
-      http.Response resp = await http.post(url, headers: headers, body: body);
-      if (resp.statusCode != 200) {
-        setState(() {
-          int statusCode = resp.statusCode;
-          _content = "Failed to post $statusCode";
-        });
-        return;
-      }
-      setState(() {
-        _content = resp.body;
-      });
-    }
-    */
-
-    void _request(mg) {
+    Future<void> _request(mg) async{
       String _content = '';
       Map<String, String> headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer {jYqO31OUnEOf/T/mj8OSOqWx+Ejp04X/Eg+nnH2Q7j3frEKGTdkJgp39Zh+hlah+BTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii7TmGrZQq8krgJRN9hZBr36cGAoNHK+4wK18AspTZKJQdB04t89/1O/w1cDnyilFU=}'
+        'Authorization': 'Bearer {vMniZbvKOErDkn2Y/TEFzZ4mfxNVNgsr5ZwN+oQLzJ3CSdDH/U5MquOoKXEc56dHBTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii52BkslzddWwktxkv/yOTnZ1sOrDhccK//UX5GvR7QlAdB04t89/1O/w1cDnyilFU=}'
       };
-      String body = json.encode({"messages":[{"type":"text","text":mg}]});
+      String body = json.encode({"messages":[{"type":"text","text":mg},{"type":"text","text":"やっふぃー"}]});
       
+      final url = Uri.parse("https://httpbin.org/post");
+
+      final response = await http.post(url, headers: headers, body: body);
+      print(response.body);
+      print(response.statusCode);
+
       //var url = Uri.https('https://api.line.me/v2/bot/message/broadcast','');
       //print(url);
       
