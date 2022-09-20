@@ -496,11 +496,11 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
       String _content = '';
       Map<String, String> headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer {vMniZbvKOErDkn2Y/TEFzZ4mfxNVNgsr5ZwN+oQLzJ3CSdDH/U5MquOoKXEc56dHBTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jii52BkslzddWwktxkv/yOTnZ1sOrDhccK//UX5GvR7QlAdB04t89/1O/w1cDnyilFU=}'
+        'Authorization': 'Bearer {}'
       };
       String body = json.encode({"messages":[{"type":"text","text":mg},{"type":"text","text":"やっふぃー"}]});
       
-      final url = Uri.parse("https://httpbin.org/post");
+      final url = Uri.parse("https://api.line.me/v2/bot/message/broadcast");
 
       final response = await http.post(url, headers: headers, body: body);
       print(response.body);
