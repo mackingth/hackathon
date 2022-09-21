@@ -496,7 +496,7 @@ class _AchievementPostPageState extends State<AchievementPostPage> {
       String _content = '';
       Map<String, String> headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer {05wUuDxmO5EcOKT3CB0CxOHC+rKRdpdxYd4K0rZ9udoKX53OfOcmVSuo6FVC0ziABTwp7dr3m8jELlcj/RwsWE3UbPU3s8GDPIhuyQz0Jij8OR6oItggCCCmPL2lJMTyM4Pg7J0m8JwqPYvPU5aflQdB04t89/1O/w1cDnyilFU=}'
+        'Authorization': 'Bearer {}'
       };
       String body = json.encode({"messages":[{"type":"text","text":mg},{"type":"text","text":"やっふぃー"}]});
       
